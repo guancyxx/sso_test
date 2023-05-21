@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>单点登录及集中认证演示项目</title>
+    <!-- 引入bootstrap4样式 国内镜像站 -->
+    <link
+      href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.2/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body class="container">
+    <h1 class="text-center">单点登录及集中认证演示项目(client B)</h1>
+
+    <div class="row">
+        {% if user.is_authenticated %}
+        <div class="col-8">
+            <h2>用户信息</h2>
+            <p>当前登录用户名：{{ user.username }}</p>
+        </div>
+        <div class="col-4">
+            <h2>操作</h2>
+            <a href="{% url 'cas_ng_logout' %}" class="btn btn-danger">退出登录</a>
+        </div>
+        {% else %}
+        <div class="col-8">
+            <h2>用户信息</h2>
+            <p>未登录</p>
+            </div>
+            <div class="col-4">
+            <h2>操作</h2>
+            <a href="{% url 'cas_ng_login' %}" class="btn btn-primary">登录</a>
+        </div>
+        {% endif %}
+    </div>
+  </body>
+  <!-- jQuery and JavaScript Bundle with Popper -->
+  <script
+    src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.slim.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"
+  ></script>
+  <script
+    src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.bundle.min.js"
+    integrity="sha384-7ymO4nGrkm372HoSbq1OY2DP4pEZnMiA+E0F3zPr+JQQtQ82gQ1HPY3QIVtztVua"
+    crossorigin="anonymous"
+  ></script>
+  <!-- 引入mermaid -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <!-- 引入mermaid初始化脚本 -->
+  <script>
+    mermaid.initialize({ startOnLoad: true });
+  </script>
+</html>

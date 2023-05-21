@@ -131,15 +131,8 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'django_cas_ng.backends.CASBackend',
 ]
-# TODO: 从环境变量中获取
-# cas_server_host = os.environ.get('CAS_SERVER_URL', 'localhost:8081')
-cas_server_host = os.environ.get('CAS_SERVER_URL', 'casserver.frp.guancyxx.cn')
-print(cas_server_host)
 
-# TODO: 从环境变量中获取
-# CLIENT_B_URL = os.environ.get('CLIENT_B_URL', 'localhost:8083')
-CLIENT_B_URL = os.environ.get('CLIENT_B_URL', 'casclient2.frp.guancyxx.cn')
-
+cas_server_host = os.environ.get('CAS_SERVER_URL', 'localhost:8081')
 
 CAS_SERVER_URL = 'http://{}/'.format(cas_server_host)
 CAS_VERSION = '3'

@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,7 +26,7 @@ SECRET_KEY = 'django-insecure-#4=h1&8(acep4ex_llws)g&#ot^8ygr@ew)#gxj1!aivjjucd#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'demo',
+    'mama_cas',
 ]
 
 MIDDLEWARE = [
@@ -121,3 +124,22 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# TODO: 从环境变量中获取
+# cas_services = os.environ.get('CAS_SERVICES', ['http://localhost:8082',"http://localhost:8083"])
+cas_services = os.environ.get('CAS_SERVICES', ['http://localhost:8082',"http://localhost:8083"])
+print(cas_services)
+
+if isinstance(cas_services,str):
+    cas_services = eval(cas_services)
+
+
+MAMA_CAS_SERVICES =  [
+    {
+        'SERVICE': item,
+        'CALLBACKS': [
+            'mama_cas.callbacks.user_model_attributes',
+            'mama_cas.callbacks.user_name_attributes',
+        ],
+    } for item in cas_services
+]

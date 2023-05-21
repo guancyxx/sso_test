@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>单点登录及集中认证演示项目(client A)</title>
+    <!-- 引入bootstrap4样式 国内镜像站 -->
+    <link
+      href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.2/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body class="container">
+    <h1 class="text-center">单点登录及集中认证演示项目</h1>
+
+    <div class="row">
+        {% if user.is_authenticated %}
+        <div class="col-8">
+            <h2>用户信息</h2>
+            <p>当前登录用户名：{{ user.username }}</p>
+        </div>
+        <div class="col-4">
+            <h2>操作</h2>
+            <a href="{% url 'cas_ng_logout' %}" class="btn btn-danger">退出登录</a>
+            <!-- 访问应用B -->
+            <a href="{{client_b_url}}" class="btn btn-primary" target="_blank">访问应用B</a>
+        </div>
+        {% else %}
+        <div class="col-8">
+            <h2>用户信息</h2>
+            <p>未登录</p>
+            </div>
+            <div class="col-4">
+            <h2>操作</h2>
+            <a href="{% url 'cas_ng_login' %}" class="btn btn-primary">登录</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <h2>信息说明</h2>
+      </div>
+      <div class="col-12 row">
+        <div class="col-4">
+          CAS服务端地址
+        </div>
+        <div class="col-8">
+          {{cas_server_url}}
+        </div>
+        <div class="col-4">
+          应用B地址
+        </div>
+        <div class="col-8">
+          {{client_b_url}}
+        </div>
+        <div class="col-4">
+          注意事项
+        </div>
+        <div class="col-8" style="color: red;">
+          页面跳转过程中留意地址栏变化
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <h2>单点登录演示流程图</h2>
+      </div>
+      <div class="col-12 mermaid">
+        sequenceDiagram
+        participant U AS 用户
+        participant B AS 浏览器
+        participant C1 AS 应用A
+        participant C2 AS 应用B 
+        participant S AS 认证中心 
+        U->>B: 访问应用A 
+        B->>C1: 访问应用A 
+        C1->>C1: 检查是否登录
+        C1->>S: 未登录，请求登录 
+        S->>S: 检查是否登录 
+        S->>B: 未登录，跳转到登录页面 
+        B->>U: 显示登录页面 
+        U->>B: 输入用户名密码，提交
+        B->>S: 提交用户名密码 
+        S->>S: 验证用户名密码 
+        S->>B: 验证成功，跳转回应用A，并附带ticket 
+        B->>C1: 跳转回应用A，并附带ticket
+        C1->>S: 请求验证ticket 
+        S->>C1: 验证ticket成功 返回用户信息 
+        C1->>B: 跳转回应用A页面 
+        B->>U: 显示应用A页面 
+        U->>B: 访问应用B 
+        B->>C2: 访问应用B
+        C2->>C2: 检查是否登录 
+        C2->>S: 未登录，请求登录 
+        S->>B: 跳转登录,检查cookie 
+        B->>S: 携带cookie请求登录 
+        S->>S: 检查是否登录，检查cookie中的ticket 
+        S->>C2: 已登录，跳转回应用B,并附带ticket 
+        C2->>S: 请求验证ticket 
+        S->>C2: 验证ticket成功 返回用户信息 
+        C2->>B: 跳转回应用B 
+        B->>U: 显示应用B页面
+      </div>
+    </div>
+  </body>
+  <!-- jQuery and JavaScript Bundle with Popper -->
+  <script
+    src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.slim.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"
+  ></script>
+  <script
+    src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.bundle.min.js"
+    integrity="sha384-7ymO4nGrkm372HoSbq1OY2DP4pEZnMiA+E0F3zPr+JQQtQ82gQ1HPY3QIVtztVua"
+    crossorigin="anonymous"
+  ></script>
+  <!-- 引入mermaid -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <!-- 引入mermaid初始化脚本 -->
+  <script>
+    mermaid.initialize({ startOnLoad: true });
+  </script>
+</html>
